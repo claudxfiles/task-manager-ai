@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 interface GoogleSignInButtonProps {
   callbackUrl?: string;
@@ -23,9 +24,31 @@ export function GoogleSignInButton({
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
-      await signIn("google", { callbackUrl });
+      const result = await signIn("google", { 
+        callbackUrl,
+        redirect: false
+      });
+      
+      if (result?.error) {
+        // Manejo de errores específicos
+        if (result.error === "Configuration") {
+          toast.error("Error de configuración", {
+            description: "El servicio de autenticación no está configurado correctamente. Por favor, contacta con soporte."
+          });
+        } else {
+          toast.error("Error de autenticación", {
+            description: "No se pudo iniciar sesión con Google. Por favor, inténtalo de nuevo más tarde."
+          });
+        }
+      } else if (result?.url) {
+        // Redirección manual en caso de éxito
+        window.location.href = result.url;
+      }
     } catch (error) {
       console.error("Error al iniciar sesión con Google:", error);
+      toast.error("Error inesperado", {
+        description: "Ocurrió un error al intentar iniciar sesión. Por favor, inténtalo de nuevo."
+      });
     } finally {
       setIsLoading(false);
     }
