@@ -1,170 +1,224 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Plus, CreditCard, Wallet, DollarSign, ArrowDownRight, ArrowUpRight } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Wallet, Plus, ArrowUpRight, ArrowDownLeft, DollarSign, Trash2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface Transaction {
   id: string;
   amount: number;
-  type: "income" | "expense";
+  type: 'income' | 'expense';
+  category: string;
   description: string;
   date: string;
-  category: string;
 }
-
-interface Account {
-  id: string;
-  name: string;
-  balance: number;
-  currency: string;
-  transactions: Transaction[];
-}
-
-interface CreditCard {
-  id: string;
-  name: string;
-  balance: number;
-  limit: number;
-  currency: string;
-  transactions: Transaction[];
-}
-
-const defaultAccounts: Account[] = [
-  {
-    id: "1",
-    name: "Cuenta 1",
-    balance: 0,
-    currency: "US$",
-    transactions: []
-  },
-  {
-    id: "2",
-    name: "Cuenta 2",
-    balance: 0,
-    currency: "US$",
-    transactions: []
-  }
-];
 
 export default function FinancesPage() {
-  const [accounts, setAccounts] = useLocalStorage<Account[]>("accounts", defaultAccounts);
-  const [creditCards, setCreditCards] = useLocalStorage<CreditCard[]>("creditCards", []);
-  const [activeTab, setActiveTab] = useState("accounts");
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [newTransaction, setNewTransaction] = useState<Partial<Transaction>>({});
 
-  const addTransaction = (accountId: string, transaction: Omit<Transaction, "id">) => {
-    const newTransaction = {
-      ...transaction,
+  const handleAddTransaction = () => {
+    if (!newTransaction.amount || !newTransaction.type || !newTransaction.category) return;
+
+    const transaction: Transaction = {
       id: Date.now().toString(),
+      amount: newTransaction.amount,
+      type: newTransaction.type,
+      category: newTransaction.category,
+      description: newTransaction.description || '',
+      date: new Date().toISOString(),
     };
 
-    setAccounts(prevAccounts =>
-      prevAccounts.map(account => {
-        if (account.id === accountId) {
-          const newBalance = transaction.type === "income"
-            ? account.balance + transaction.amount
-            : account.balance - transaction.amount;
-          
-          return {
-            ...account,
-            balance: newBalance,
-            transactions: [...account.transactions, newTransaction]
-          };
-        }
-        return account;
-      })
-    );
+    setTransactions([...transactions, transaction]);
+    setNewTransaction({});
+  };
+
+  const handleDeleteTransaction = (id: string) => {
+    setTransactions(transactions.filter(transaction => transaction.id !== id));
+  };
+
+  const calculateBalance = () => {
+    return transactions.reduce((acc, curr) => {
+      return curr.type === 'income' ? acc + curr.amount : acc - curr.amount;
+    }, 0);
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <motion.h1 
-          className="text-2xl font-bold"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          Finanzas
-        </motion.h1>
-      </div>
+    <div className="container mx-auto p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="text-3xl font-bold mb-8 flex items-center gap-2">
+          <Wallet className="w-8 h-8" />
+          Finance Tracker
+        </h1>
 
-      <Tabs defaultValue="accounts" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="accounts" className="flex items-center gap-2">
-            <Wallet size={20} /> Cuentas
-          </TabsTrigger>
-          <TabsTrigger value="creditCards" className="flex items-center gap-2">
-            <CreditCard size={20} /> Tarjetas de Crédito
-          </TabsTrigger>
-        </TabsList>
+        <div className="grid gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Balance</CardTitle>
+                <CardDescription>Current balance</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold flex items-center gap-2">
+                  <DollarSign className="w-6 h-6" />
+                  {calculateBalance().toFixed(2)}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Income</CardTitle>
+                <CardDescription>Total income</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600 flex items-center gap-2">
+                  <ArrowUpRight className="w-6 h-6" />
+                  {transactions
+                    .filter(t => t.type === 'income')
+                    .reduce((acc, curr) => acc + curr.amount, 0)
+                    .toFixed(2)}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Expenses</CardTitle>
+                <CardDescription>Total expenses</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-red-600 flex items-center gap-2">
+                  <ArrowDownLeft className="w-6 h-6" />
+                  {transactions
+                    .filter(t => t.type === 'expense')
+                    .reduce((acc, curr) => acc + curr.amount, 0)
+                    .toFixed(2)}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-        <TabsContent value="accounts" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {accounts.map(account => (
-              <Card key={account.id} className="p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">{account.name}</h3>
-                  <Button variant="outline" size="sm">
-                    <Plus size={16} className="mr-2" /> Agregar Transacción
-                  </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle>Add New Transaction</CardTitle>
+              <CardDescription>Track your income and expenses</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="amount">Amount</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    value={newTransaction.amount || ''}
+                    onChange={(e) => setNewTransaction({ ...newTransaction, amount: parseFloat(e.target.value) })}
+                    placeholder="0.00"
+                  />
                 </div>
-                <div className="flex items-center gap-2 mb-6">
-                  <DollarSign className="text-muted-foreground" size={20} />
-                  <span className="text-2xl font-bold">
-                    {account.balance.toFixed(2)} {account.currency}
-                  </span>
+                <div className="grid gap-2">
+                  <Label htmlFor="type">Type</Label>
+                  <Select
+                    value={newTransaction.type}
+                    onValueChange={(value: 'income' | 'expense') => setNewTransaction({ ...newTransaction, type: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="income">Income</SelectItem>
+                      <SelectItem value="expense">Expense</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <div className="space-y-2">
-                  {account.transactions.slice(-3).map(transaction => (
-                    <div key={transaction.id} className="flex justify-between items-center p-2 rounded-lg bg-muted/50">
-                      <div className="flex items-center gap-2">
-                        {transaction.type === "income" ? (
-                          <ArrowUpRight className="text-green-500" size={18} />
-                        ) : (
-                          <ArrowDownRight className="text-red-500" size={18} />
-                        )}
-                        <span className="text-sm">{transaction.description}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Select
+                    value={newTransaction.category}
+                    onValueChange={(value) => setNewTransaction({ ...newTransaction, category: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="salary">Salary</SelectItem>
+                      <SelectItem value="investment">Investment</SelectItem>
+                      <SelectItem value="food">Food</SelectItem>
+                      <SelectItem value="transport">Transport</SelectItem>
+                      <SelectItem value="utilities">Utilities</SelectItem>
+                      <SelectItem value="entertainment">Entertainment</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Input
+                    id="description"
+                    value={newTransaction.description || ''}
+                    onChange={(e) => setNewTransaction({ ...newTransaction, description: e.target.value })}
+                    placeholder="Enter description"
+                  />
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={handleAddTransaction} className="w-full">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Transaction
+              </Button>
+            </CardFooter>
+          </Card>
+
+          <div className="grid gap-4">
+            {transactions.map((transaction) => (
+              <motion.div
+                key={transaction.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="flex items-center gap-2">
+                          {transaction.type === 'income' ? (
+                            <ArrowUpRight className="w-5 h-5 text-green-600" />
+                          ) : (
+                            <ArrowDownLeft className="w-5 h-5 text-red-600" />
+                          )}
+                          ${transaction.amount.toFixed(2)}
+                        </CardTitle>
+                        <CardDescription>{transaction.category}</CardDescription>
                       </div>
-                      <span className={`font-medium ${
-                        transaction.type === "income" ? "text-green-500" : "text-red-500"
-                      }`}>
-                        {transaction.type === "income" ? "+" : "-"}
-                        {transaction.amount.toFixed(2)} {account.currency}
-                      </span>
+                      <Button variant="ghost" size="icon" onClick={() => handleDeleteTransaction(transaction.id)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
-                  ))}
-                </div>
-              </Card>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm">{transaction.description}</p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {new Date(transaction.date).toLocaleDateString()}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
-        </TabsContent>
-
-        <TabsContent value="creditCards" className="space-y-4">
-          <div className="flex justify-end">
-            <Button>
-              <Plus size={20} className="mr-2" /> Nueva Tarjeta
-            </Button>
-          </div>
-          {creditCards.length === 0 ? (
-            <Card className="p-6 text-center">
-              <CreditCard size={40} className="mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-semibold mb-2">No hay tarjetas registradas</h3>
-              <p className="text-muted-foreground">
-                Agrega una tarjeta de crédito para hacer seguimiento de tus gastos
-              </p>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Aquí irán las tarjetas de crédito */}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+        </div>
+      </motion.div>
     </div>
   );
-} 
+}
