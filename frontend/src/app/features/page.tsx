@@ -70,7 +70,9 @@ const allFeatures = [
     description: "Recibe retroalimentación constructiva y sugerencias de mejora en tiempo real.",
     color: "from-soul-blue to-soul-green",
     delay: 0.3,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Básico"
   },
   {
     icon: RefreshCw,
@@ -78,7 +80,9 @@ const allFeatures = [
     description: "El plan se ajusta automáticamente según tu progreso y circunstancias cambiantes.",
     color: "from-soul-green to-soul-purple",
     delay: 0.35,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Limitado"
   },
   {
     icon: CheckCircle,
@@ -86,7 +90,9 @@ const allFeatures = [
     description: "Crea y mantén hábitos positivos con recordatorios y estadísticas de consistencia.",
     color: "from-soul-purple to-soul-blue",
     delay: 0.4,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Máx. 3 hábitos"
   },
   {
     icon: Wallet,
@@ -104,7 +110,9 @@ const allFeatures = [
     description: "Realiza un seguimiento de tu salud física y mental con métricas personalizadas.",
     color: "from-soul-green to-soul-purple",
     delay: 0.5,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Básico"
   },
   {
     icon: BarChart2,
@@ -112,7 +120,9 @@ const allFeatures = [
     description: "Visualiza tu progreso con gráficos detallados y análisis de tendencias.",
     color: "from-soul-purple to-soul-blue",
     delay: 0.55,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Limitado"
   },
   {
     icon: Settings,
@@ -120,7 +130,9 @@ const allFeatures = [
     description: "Adapta la aplicación a tus necesidades con opciones de personalización extensas.",
     color: "from-soul-blue to-soul-green",
     delay: 0.6,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Básico"
   },
   {
     icon: Users,
@@ -128,7 +140,9 @@ const allFeatures = [
     description: "Conecta con otros usuarios para compartir experiencias y motivación.",
     color: "from-soul-green to-soul-purple",
     delay: 0.65,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Solo lectura"
   },
   {
     icon: Shield,
@@ -136,7 +150,9 @@ const allFeatures = [
     description: "Tus datos están seguros con encriptación de extremo a extremo y controles de privacidad.",
     color: "from-soul-purple to-soul-blue",
     delay: 0.7,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Básico"
   },
   {
     icon: Clock,
@@ -144,7 +160,9 @@ const allFeatures = [
     description: "Recibe notificaciones contextuales basadas en tus hábitos y preferencias.",
     color: "from-soul-blue to-soul-green",
     delay: 0.75,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Máx. 5 recordatorios"
   },
   {
     icon: Sparkles,
@@ -152,7 +170,9 @@ const allFeatures = [
     description: "Mantén la motivación con un sistema de recompensas, logros y desafíos.",
     color: "from-soul-green to-soul-purple",
     delay: 0.8,
-    restricted: false
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "Básico"
   },
 ];
 
@@ -294,7 +314,7 @@ export default function FeaturesPage() {
               transition={{ duration: 0.5, delay: 0.9 }}
             >
               <p className="text-muted-foreground max-w-[700px] mx-auto">
-                Regístrate gratis para acceder a la mayoría de las características. Actualiza a Premium para desbloquear todas las funcionalidades sin restricciones.
+                Regístrate gratis para acceder a la versión básica. Actualiza a Premium para desbloquear todas las funcionalidades sin restricciones.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/auth/register">
