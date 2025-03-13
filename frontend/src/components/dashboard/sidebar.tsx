@@ -13,7 +13,8 @@ import {
   LayoutDashboard,
   MessageSquare,
   BarChart2,
-  Wallet
+  Wallet,
+  Dumbbell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -44,6 +45,11 @@ const navigation = [
     name: "Finanzas",
     href: "/dashboard/finances",
     icon: Wallet
+  },
+  {
+    name: "Workout",
+    href: "/dashboard/workout",
+    icon: Dumbbell
   },
   {
     name: "Chat con IA",
@@ -127,4 +133,4 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       </div>
     </>
   );
-} 
+}
