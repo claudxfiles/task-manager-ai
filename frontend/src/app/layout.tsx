@@ -6,8 +6,9 @@ import { Providers } from "@/components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SoulDream",
-  description: "Tu asistente personal para el desarrollo y crecimiento.",
+  title: 'SoulDream - Transforma tus Sueños en Realidad',
+  description: 'Planifica tu futuro con la ayuda de IA avanzada. Convierte tus metas en planes accionables y alcanza tu máximo potencial.',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({

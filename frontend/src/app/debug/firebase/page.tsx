@@ -22,11 +22,14 @@ export default function FirebaseDebugPage() {
     };
     setEnvVars(envConfig);
 
-    // Configuración directa
+    // Configuración completa de Firebase
     const directConfig = {
       apiKey: "AIzaSyB7RwKtMCRodG0ZQoxoXQHXcisQ5gJLIT4",
       authDomain: "proyectomakepersonal.firebaseapp.com",
       projectId: "proyectomakepersonal",
+      storageBucket: "proyectomakepersonal.appspot.com",
+      messagingSenderId: "253991058957",
+      appId: "1:253991058957:web:3b3efbe36c5c428a6cefb7"
     };
     setConfig(directConfig);
 
@@ -45,9 +48,19 @@ export default function FirebaseDebugPage() {
 
   const testFirebase = () => {
     try {
-      const app = initializeApp(config, "testApp" + Date.now());
+      const appName = "testApp" + Date.now();
+      const app = initializeApp(config, appName);
       const auth = getAuth(app);
-      alert("Firebase inicializado correctamente");
+      const googleProvider = new GoogleAuthProvider();
+      
+      // Configurar el proveedor de Google
+      googleProvider.addScope('profile');
+      googleProvider.addScope('email');
+      googleProvider.setCustomParameters({
+        prompt: 'select_account'
+      });
+      
+      alert("Firebase inicializado correctamente con la app: " + appName);
     } catch (error: any) {
       alert(`Error: ${error.message}`);
     }
@@ -104,6 +117,23 @@ export default function FirebaseDebugPage() {
               </pre>
             )}
           </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Solución Alternativa</CardTitle>
+            <CardDescription>Usa el método de registro con email como alternativa</CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Link href="/auth/register">
+              <Button className="flex items-center gap-2">
+                Registrarse con Email
+              </Button>
+            </Link>
+          </CardContent>
+          <CardFooter className="text-xs text-muted-foreground">
+            Este método no depende de Firebase ni de Google
+          </CardFooter>
         </Card>
       </div>
       

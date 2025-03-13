@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Mail } from "lucide-react";
 import Link from "next/link";
-import { SimpleGoogleButton } from "@/components/auth/simple-google-button";
 import { DirectGoogleButton } from "@/components/auth/direct-google-button";
 import { EmailSignInButton } from "@/components/auth/email-sign-in-button";
+import { SimpleAuthButton } from "@/components/auth/simple-auth-button";
 import { useState } from "react";
 import { AuthFallback } from "@/components/auth/auth-fallback";
 
@@ -58,8 +58,14 @@ export function HeroSection() {
               <AuthFallback errorCode={authError.code} errorMessage={authError.message} />
             ) : (
               <>
-                <DirectGoogleButton onError={handleAuthError} />
+                <SimpleAuthButton />
                 <EmailSignInButton />
+                <Link href="/auth/test">
+                  <Button variant="outline" size="lg" className="flex items-center gap-2">
+                    Más opciones
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
               </>
             )}
           </motion.div>

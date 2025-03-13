@@ -27,6 +27,9 @@ export function DirectGoogleButton({ onError }: DirectGoogleButtonProps) {
         apiKey: "AIzaSyB7RwKtMCRodG0ZQoxoXQHXcisQ5gJLIT4",
         authDomain: "proyectomakepersonal.firebaseapp.com",
         projectId: "proyectomakepersonal",
+        storageBucket: "proyectomakepersonal.appspot.com",
+        messagingSenderId: "253991058957",
+        appId: "1:253991058957:web:3b3efbe36c5c428a6cefb7"
       };
 
       // Inicializar Firebase directamente en el componente
@@ -51,24 +54,32 @@ export function DirectGoogleButton({ onError }: DirectGoogleButtonProps) {
       
       console.log('Iniciando autenticación con Google (método directo)...');
       
-      // Configuración directa de Firebase con una API key válida
+      // Configuración completa de Firebase
       const firebaseConfig = {
         apiKey: "AIzaSyB7RwKtMCRodG0ZQoxoXQHXcisQ5gJLIT4",
         authDomain: "proyectomakepersonal.firebaseapp.com",
         projectId: "proyectomakepersonal",
+        storageBucket: "proyectomakepersonal.appspot.com",
+        messagingSenderId: "253991058957",
+        appId: "1:253991058957:web:3b3efbe36c5c428a6cefb7"
       };
 
-      // Inicializar Firebase directamente en la función
-      const app = initializeApp(firebaseConfig, "directAuth");
+      // Inicializar Firebase con un nombre único para evitar colisiones
+      const appName = "directAuth" + Date.now();
+      const app = initializeApp(firebaseConfig, appName);
       const auth = getAuth(app);
       const googleProvider = new GoogleAuthProvider();
       
       // Configurar el proveedor de Google
       googleProvider.addScope('profile');
       googleProvider.addScope('email');
+      googleProvider.setCustomParameters({
+        prompt: 'select_account'
+      });
       
+      console.log("Abriendo popup de autenticación...");
       const result = await signInWithPopup(auth, googleProvider);
-      console.log("Usuario autenticado exitosamente");
+      console.log("Usuario autenticado exitosamente:", result.user.email);
       router.push('/dashboard');
     } catch (error: any) {
       console.error("Error al iniciar sesión con Google:", error);

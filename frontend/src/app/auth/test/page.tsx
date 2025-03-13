@@ -4,10 +4,12 @@ import { SimpleGoogleButton } from "@/components/auth/simple-google-button";
 import { DirectGoogleButton } from "@/components/auth/direct-google-button";
 import { NextAuthGoogleButton } from "@/components/auth/nextauth-google-button";
 import { EmailSignInButton } from "@/components/auth/email-sign-in-button";
+import { SimpleAuthButton } from "@/components/auth/simple-auth-button";
 import { useState } from "react";
 import { AuthFallback } from "@/components/auth/auth-fallback";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 
 export default function AuthTestPage() {
   const [authError, setAuthError] = useState<{code?: string, message?: string} | null>(null);
@@ -31,12 +33,30 @@ export default function AuthTestPage() {
         </div>
       )}
       
-      <Tabs defaultValue="firebase-direct">
-        <TabsList className="grid w-full grid-cols-3">
+      <Tabs defaultValue="demo">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="demo">Demo</TabsTrigger>
           <TabsTrigger value="firebase-direct">Firebase Directo</TabsTrigger>
           <TabsTrigger value="firebase-env">Firebase con Env</TabsTrigger>
           <TabsTrigger value="nextauth">NextAuth.js</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="demo" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Acceso Directo (Demo)</CardTitle>
+              <CardDescription>
+                Acceso simplificado sin autenticación real para pruebas
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex justify-center">
+              <SimpleAuthButton />
+            </CardContent>
+            <CardFooter className="text-xs text-muted-foreground">
+              Este método no requiere autenticación real, es solo para pruebas
+            </CardFooter>
+          </Card>
+        </TabsContent>
         
         <TabsContent value="firebase-direct" className="space-y-4">
           <Card>
@@ -105,6 +125,12 @@ export default function AuthTestPage() {
             Este método no depende de Firebase ni de Google
           </CardFooter>
         </Card>
+      </div>
+      
+      <div className="mt-6 text-center">
+        <Link href="/debug/firebase" className="text-primary hover:underline">
+          Ir a la página de depuración de Firebase
+        </Link>
       </div>
     </div>
   );
