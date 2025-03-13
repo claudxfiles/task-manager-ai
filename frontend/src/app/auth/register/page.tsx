@@ -1,221 +1,193 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Brain, ArrowLeft, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 
 export default function RegisterPage() {
-  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    acceptTerms: false
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-    
-    // Clear error when user types
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = "El nombre es requerido";
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = "El email es requerido";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email inválido";
-    }
-    
-    if (!formData.password) {
-      newErrors.password = "La contraseña es requerida";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "La contraseña debe tener al menos 8 caracteres";
-    }
-    
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Las contraseñas no coinciden";
-    }
-    
-    if (!formData.acceptTerms) {
-      newErrors.acceptTerms = "Debes aceptar los términos y condiciones";
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     
-    if (!validateForm()) return;
+    if (!name || !email || !password || !confirmPassword) {
+      setError("Por favor, completa todos los campos");
+      return;
+    }
     
-    setIsLoading(true);
+    if (password !== confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+    
+    if (!acceptTerms) {
+      setError("Debes aceptar los términos y condiciones");
+      return;
+    }
     
     try {
-      // Simulamos el registro (en una implementación real, aquí iría la llamada a la API)
+      setIsLoading(true);
+      // Simulación de registro exitoso
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Redirigir al dashboard después del registro exitoso
       router.push("/dashboard");
-    } catch (error) {
-      console.error("Error al registrar:", error);
-      setErrors({ form: "Error al crear la cuenta. Inténtalo de nuevo." });
+    } catch (err) {
+      setError("Error al crear la cuenta. Inténtalo de nuevo.");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-background/80 p-4">
-      <Link 
-        href="/" 
-        className="absolute top-8 left-8 flex items-center text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Volver al inicio
-      </Link>
-      
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/50 p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="flex justify-center mb-6">
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-soul-purple to-soul-blue flex items-center justify-center">
-            <Brain className="w-6 h-6 text-white" />
-          </div>
-        </div>
-        
-        <Card>
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Crear una cuenta</CardTitle>
-            <CardDescription className="text-center">
-              Ingresa tus datos para comenzar tu viaje
+        <Card className="border-soul-purple/20 shadow-lg">
+          <CardHeader className="space-y-1 text-center">
+            <CardTitle className="text-2xl font-bold">Crear Cuenta</CardTitle>
+            <CardDescription>
+              Ingresa tus datos para registrarte en SoulDream
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <GoogleSignInButton />
+            
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-muted-foreground/30" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-card px-2 text-muted-foreground">
+                  O regístrate con
+                </span>
+              </div>
+            </div>
+            
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nombre completo</Label>
-                <Input 
-                  id="name" 
-                  name="name" 
-                  placeholder="Tu nombre" 
-                  value={formData.name}
-                  onChange={handleChange}
-                  disabled={isLoading}
+                <Input
+                  id="name"
+                  placeholder="Tu nombre"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
                 />
-                {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
               </div>
-              
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input 
-                  id="email" 
-                  name="email" 
-                  type="email" 
-                  placeholder="tu@email.com" 
-                  value={formData.email}
-                  onChange={handleChange}
-                  disabled={isLoading}
+                <Label htmlFor="email">Correo electrónico</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="tu@ejemplo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
-                {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
               </div>
-              
               <div className="space-y-2">
                 <Label htmlFor="password">Contraseña</Label>
-                <Input 
-                  id="password" 
-                  name="password" 
-                  type="password" 
-                  placeholder="********" 
-                  value={formData.password}
-                  onChange={handleChange}
-                  disabled={isLoading}
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
-                {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
               </div>
-              
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Confirmar contraseña</Label>
-                <Input 
-                  id="confirmPassword" 
-                  name="confirmPassword" 
-                  type="password" 
-                  placeholder="********" 
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  disabled={isLoading}
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
                 />
-                {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword}</p>}
               </div>
               
               <div className="flex items-center space-x-2">
                 <Checkbox 
-                  id="acceptTerms" 
-                  name="acceptTerms" 
-                  checked={formData.acceptTerms}
-                  onCheckedChange={(checked) => 
-                    setFormData(prev => ({ ...prev, acceptTerms: checked as boolean }))
-                  }
-                  disabled={isLoading}
+                  id="terms" 
+                  checked={acceptTerms}
+                  onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
                 />
-                <label 
-                  htmlFor="acceptTerms" 
+                <label
+                  htmlFor="terms"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Acepto los términos y condiciones
+                  Acepto los{" "}
+                  <Link href="/terms" className="text-soul-purple hover:underline">
+                    términos y condiciones
+                  </Link>
                 </label>
               </div>
-              {errors.acceptTerms && <p className="text-sm text-red-500">{errors.acceptTerms}</p>}
               
-              {errors.form && <p className="text-sm text-red-500 text-center">{errors.form}</p>}
+              {error && (
+                <motion.p
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-destructive text-sm"
+                >
+                  {error}
+                </motion.p>
+              )}
               
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full bg-soul-purple hover:bg-soul-purple/90"
+                disabled={isLoading}
+              >
                 {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                     Creando cuenta...
-                  </>
+                  </span>
                 ) : (
-                  "Crear cuenta"
+                  "Crear Cuenta"
                 )}
               </Button>
             </form>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <div className="text-sm text-center text-muted-foreground">
+            <div className="text-center text-sm">
               ¿Ya tienes una cuenta?{" "}
-              <Link href="/auth/login" className="text-primary hover:underline">
-                Iniciar sesión
+              <Link
+                href="/auth/login"
+                className="text-soul-purple hover:underline font-medium"
+              >
+                Inicia sesión
               </Link>
             </div>
           </CardFooter>
