@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider } from '@/lib/firebase';
+import { signInWithPopup, GoogleAuthProvider, getAuth } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -16,20 +16,56 @@ export function DirectGoogleButton({ onError }: DirectGoogleButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<string | null>(null);
+  const [firebaseStatus, setFirebaseStatus] = useState<string>("No inicializado");
   const router = useRouter();
+
+  // Verificar el estado de Firebase al cargar el componente
+  useEffect(() => {
+    try {
+      // Configuración directa de Firebase con una API key válida
+      const firebaseConfig = {
+        apiKey: "AIzaSyB7RwKtMCRodG0ZQoxoXQHXcisQ5gJLIT4",
+        authDomain: "proyectomakepersonal.firebaseapp.com",
+        projectId: "proyectomakepersonal",
+      };
+
+      // Inicializar Firebase directamente en el componente
+      const app = initializeApp(firebaseConfig, "directAuth");
+      const auth = getAuth(app);
+      
+      setFirebaseStatus("Inicializado correctamente");
+      setDebugInfo(`Firebase inicializado con: 
+        - apiKey: ***${firebaseConfig.apiKey.slice(-4)}
+        - authDomain: ${firebaseConfig.authDomain}
+        - projectId: ${firebaseConfig.projectId}`);
+    } catch (error: any) {
+      setFirebaseStatus(`Error: ${error.message}`);
+      setDebugInfo(JSON.stringify(error));
+    }
+  }, []);
 
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      setDebugInfo(null);
       
       console.log('Iniciando autenticación con Google (método directo)...');
       
-      // Verificar si Firebase está inicializado
-      if (!auth || !googleProvider) {
-        throw new Error("Firebase no está inicializado correctamente. Verifica la consola para más detalles.");
-      }
+      // Configuración directa de Firebase con una API key válida
+      const firebaseConfig = {
+        apiKey: "AIzaSyB7RwKtMCRodG0ZQoxoXQHXcisQ5gJLIT4",
+        authDomain: "proyectomakepersonal.firebaseapp.com",
+        projectId: "proyectomakepersonal",
+      };
+
+      // Inicializar Firebase directamente en la función
+      const app = initializeApp(firebaseConfig, "directAuth");
+      const auth = getAuth(app);
+      const googleProvider = new GoogleAuthProvider();
+      
+      // Configurar el proveedor de Google
+      googleProvider.addScope('profile');
+      googleProvider.addScope('email');
       
       const result = await signInWithPopup(auth, googleProvider);
       console.log("Usuario autenticado exitosamente");
@@ -48,7 +84,7 @@ export function DirectGoogleButton({ onError }: DirectGoogleButtonProps) {
       
       // Manejar errores específicos con mensajes más amigables
       if (error.code === 'auth/api-key-not-valid-please-pass-a-valid-api-key') {
-        setError("La configuración de Firebase no es correcta. Por favor, verifica tus credenciales.");
+        setError("La API key de Firebase no es válida. Contacta al administrador.");
       } else if (error.code === 'auth/configuration-not-found') {
         setError("La configuración de Firebase no se ha encontrado. Verifica tu archivo .env.local.");
       } else if (error.code === 'auth/popup-closed-by-user') {
@@ -73,6 +109,10 @@ export function DirectGoogleButton({ onError }: DirectGoogleButtonProps) {
 
   return (
     <div className="flex flex-col items-center">
+      <div className="mb-2 text-xs text-blue-500">
+        Estado de Firebase: {firebaseStatus}
+      </div>
+      
       <Button
         variant="default"
         size="lg"

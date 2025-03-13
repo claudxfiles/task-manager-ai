@@ -1,0 +1,12 @@
+{
+  "name": "task-manager-ai",
+  "version": "1.0.0",
+  "description": "Task Manager AI Project",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start"
+  },
+  "author": "",
+  "license": "ISC"
+} 
