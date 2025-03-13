@@ -1,54 +1,49 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 interface GoogleSignInButtonProps {
-  callbackUrl?: string;
   className?: string;
   variant?: "default" | "outline" | "secondary" | "ghost" | "link" | "destructive";
   text?: string;
+  size?: "default" | "sm" | "lg" | "icon";
 }
 
 export function GoogleSignInButton({
-  callbackUrl = "/dashboard",
   className = "",
   variant = "outline",
-  text = "Continuar con Google"
+  text = "Continuar con Google",
+  size = "default"
 }: GoogleSignInButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const { signInWithGoogle } = useAuth();
 
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
-      const result = await signIn("google", { 
-        callbackUrl,
-        redirect: false
-      });
-      
-      if (result?.error) {
-        // Manejo de errores específicos
-        if (result.error === "Configuration") {
-          toast.error("Error de configuración", {
-            description: "El servicio de autenticación no está configurado correctamente. Por favor, contacta con soporte."
-          });
-        } else {
-          toast.error("Error de autenticación", {
-            description: "No se pudo iniciar sesión con Google. Por favor, inténtalo de nuevo más tarde."
-          });
-        }
-      } else if (result?.url) {
-        // Redirección manual en caso de éxito
-        window.location.href = result.url;
-      }
-    } catch (error) {
+      await signInWithGoogle();
+      // La redirección se maneja en el hook useAuth
+    } catch (error: any) {
       console.error("Error al iniciar sesión con Google:", error);
-      toast.error("Error inesperado", {
-        description: "Ocurrió un error al intentar iniciar sesión. Por favor, inténtalo de nuevo."
-      });
+      
+      // Mensajes de error personalizados según el tipo de error
+      if (error.code === 'auth/popup-closed-by-user') {
+        toast.error("Inicio de sesión cancelado", {
+          description: "Has cerrado la ventana de inicio de sesión."
+        });
+      } else if (error.code === 'auth/popup-blocked') {
+        toast.error("Ventana emergente bloqueada", {
+          description: "Por favor, permite ventanas emergentes para este sitio e inténtalo de nuevo."
+        });
+      } else {
+        toast.error("Error de autenticación", {
+          description: "No se pudo iniciar sesión con Google. Por favor, inténtalo de nuevo más tarde."
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -57,13 +52,14 @@ export function GoogleSignInButton({
   return (
     <Button
       variant={variant}
-      className={`w-full flex items-center justify-center gap-2 ${className}`}
+      size={size}
+      className={`flex items-center justify-center gap-2 ${className}`}
       onClick={handleGoogleSignIn}
       disabled={isLoading}
     >
       {isLoading ? (
         <span className="flex items-center gap-2">
-          <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>

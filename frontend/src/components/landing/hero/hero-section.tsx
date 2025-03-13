@@ -45,8 +45,9 @@ export function HeroSection() {
           >
             <GoogleSignInButton 
               variant="default"
-              text="Comienza Gratis con Google"
-              className="sm:min-w-[240px]"
+              text="Comienza Gratis"
+              size="lg"
+              className="sm:w-auto px-8"
             />
             <Button 
               size="lg" 
