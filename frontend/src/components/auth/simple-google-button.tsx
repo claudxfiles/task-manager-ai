@@ -12,7 +12,7 @@ interface SimpleGoogleButtonProps {
   onError?: (code?: string, message?: string) => void;
 }
 
-export function SimpleGoogleButton({ onError }: SimpleGoogleButtonProps = {}) {
+export function SimpleGoogleButton({ onError }: SimpleGoogleButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<string | null>(null);
@@ -27,6 +27,11 @@ export function SimpleGoogleButton({ onError }: SimpleGoogleButtonProps = {}) {
       // Mostrar información de depuración
       console.log('Iniciando autenticación con Google...');
       
+      // Verificar si Firebase está inicializado
+      if (!auth || !googleProvider) {
+        throw new Error("Firebase no está inicializado correctamente. Verifica la consola para más detalles.");
+      }
+      
       const result = await signInWithPopup(auth, googleProvider);
       console.log("Usuario autenticado exitosamente");
       router.push('/dashboard');
@@ -34,7 +39,7 @@ export function SimpleGoogleButton({ onError }: SimpleGoogleButtonProps = {}) {
       console.error("Error al iniciar sesión con Google:", error);
       
       // Guardar información de depuración
-      setDebugInfo(`Código: ${error.code}, Mensaje: ${error.message}`);
+      setDebugInfo(`Código: ${error.code || 'desconocido'}, Mensaje: ${error.message || 'No hay mensaje de error'}`);
       
       // Si se proporcionó un manejador de errores, llamarlo
       if (onError) {
@@ -57,6 +62,8 @@ export function SimpleGoogleButton({ onError }: SimpleGoogleButtonProps = {}) {
         setError("Error interno de Firebase. Por favor, intenta más tarde.");
       } else if (error.code === 'auth/invalid-api-key') {
         setError("La API key de Firebase no es válida. Contacta al administrador.");
+      } else if (!error.code && error.message && error.message.includes('Firebase')) {
+        setError("Error de inicialización de Firebase. Verifica la configuración.");
       } else {
         setError("Ocurrió un error al iniciar sesión. Por favor, intenta más tarde o usa el registro con email.");
       }
@@ -112,6 +119,11 @@ export function SimpleGoogleButton({ onError }: SimpleGoogleButtonProps = {}) {
           <details>
             <summary className="cursor-pointer hover:text-gray-700">Información de depuración</summary>
             <p className="mt-1 text-left bg-gray-100 p-2 rounded">{debugInfo}</p>
+            <p className="mt-1 text-left">
+              <Link href="/debug/firebase" className="text-primary hover:underline text-xs">
+                Ir a la página de depuración de Firebase
+              </Link>
+            </p>
           </details>
         </div>
       )}
