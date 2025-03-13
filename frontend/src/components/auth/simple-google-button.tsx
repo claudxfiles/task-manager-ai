@@ -8,7 +8,11 @@ import { auth, googleProvider } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export function SimpleGoogleButton() {
+interface SimpleGoogleButtonProps {
+  onError?: (code?: string, message?: string) => void;
+}
+
+export function SimpleGoogleButton({ onError }: SimpleGoogleButtonProps = {}) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<string | null>(null);
@@ -22,10 +26,9 @@ export function SimpleGoogleButton() {
       
       // Mostrar información de depuración
       console.log('Iniciando autenticación con Google...');
-      console.log('Auth Provider:', googleProvider);
       
       const result = await signInWithPopup(auth, googleProvider);
-      console.log("Usuario autenticado:", result.user);
+      console.log("Usuario autenticado exitosamente");
       router.push('/dashboard');
     } catch (error: any) {
       console.error("Error al iniciar sesión con Google:", error);
@@ -33,19 +36,29 @@ export function SimpleGoogleButton() {
       // Guardar información de depuración
       setDebugInfo(`Código: ${error.code}, Mensaje: ${error.message}`);
       
-      // Manejar errores específicos
+      // Si se proporcionó un manejador de errores, llamarlo
+      if (onError) {
+        onError(error.code, error.message);
+        return; // No mostrar el error localmente si se está manejando externamente
+      }
+      
+      // Manejar errores específicos con mensajes más amigables
       if (error.code === 'auth/api-key-not-valid-please-pass-a-valid-api-key') {
-        setError("La API key de Firebase no es válida. Por favor, contacta al administrador.");
+        setError("La configuración de Firebase no es correcta. Por favor, verifica tus credenciales.");
       } else if (error.code === 'auth/configuration-not-found') {
         setError("La configuración de Firebase no se ha encontrado. Verifica tu archivo .env.local.");
       } else if (error.code === 'auth/popup-closed-by-user') {
-        setError("Has cerrado la ventana de inicio de sesión.");
+        setError("Has cerrado la ventana de inicio de sesión. Inténtalo de nuevo.");
       } else if (error.code === 'auth/popup-blocked') {
         setError("El navegador ha bloqueado la ventana emergente. Por favor, permite ventanas emergentes para este sitio.");
       } else if (error.code === 'auth/network-request-failed') {
         setError("Error de red. Verifica tu conexión a Internet.");
+      } else if (error.code === 'auth/internal-error') {
+        setError("Error interno de Firebase. Por favor, intenta más tarde.");
+      } else if (error.code === 'auth/invalid-api-key') {
+        setError("La API key de Firebase no es válida. Contacta al administrador.");
       } else {
-        setError(error.message || 'Ocurrió un error al iniciar sesión');
+        setError("Ocurrió un error al iniciar sesión. Por favor, intenta más tarde o usa el registro con email.");
       }
     } finally {
       setIsLoading(false);
@@ -84,22 +97,20 @@ export function SimpleGoogleButton() {
       </Button>
       
       {error && (
-        <div className="mt-2 text-sm text-red-500 max-w-md text-center">
+        <div className="mt-2 text-sm text-red-500 max-w-md text-center p-2 bg-red-50 rounded-md border border-red-100">
           <p>{error}</p>
-          {error.includes('API key') && (
-            <p className="mt-1">
-              <Link href="/auth/register" className="text-primary hover:underline">
-                Regístrate con email
-              </Link> mientras solucionamos este problema.
-            </p>
-          )}
+          <p className="mt-1">
+            <Link href="/auth/register" className="text-primary hover:underline font-medium">
+              Regístrate con email
+            </Link> como alternativa.
+          </p>
         </div>
       )}
       
       {debugInfo && (
         <div className="mt-2 text-xs text-gray-500 max-w-md text-center">
           <details>
-            <summary>Información de depuración</summary>
+            <summary className="cursor-pointer hover:text-gray-700">Información de depuración</summary>
             <p className="mt-1 text-left bg-gray-100 p-2 rounded">{debugInfo}</p>
           </details>
         </div>

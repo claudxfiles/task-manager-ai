@@ -22,7 +22,7 @@ export function EmailSignInButton() {
     <Button
       variant="outline"
       size="lg"
-      className="flex items-center justify-center gap-2 sm:w-auto px-8 border-primary/20"
+      className="flex items-center justify-center gap-2 sm:w-auto px-8 border-primary/20 hover:bg-primary/5 transition-all"
       onClick={handleEmailSignIn}
       disabled={isLoading}
     >
@@ -36,8 +36,8 @@ export function EmailSignInButton() {
         </span>
       ) : (
         <>
-          <Mail className="h-4 w-4" />
-          Registrarse con Email
+          <Mail className="h-4 w-4 text-primary" />
+          <span>Registrarse con Email</span>
         </>
       )}
     </Button>

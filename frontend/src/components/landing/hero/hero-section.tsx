@@ -6,8 +6,17 @@ import { ArrowRight, Sparkles, Mail } from "lucide-react";
 import Link from "next/link";
 import { SimpleGoogleButton } from "@/components/auth/simple-google-button";
 import { EmailSignInButton } from "@/components/auth/email-sign-in-button";
+import { useState } from "react";
+import { AuthFallback } from "@/components/auth/auth-fallback";
 
 export function HeroSection() {
+  const [authError, setAuthError] = useState<{code?: string, message?: string} | null>(null);
+
+  // Función para manejar errores de autenticación
+  const handleAuthError = (code?: string, message?: string) => {
+    setAuthError({ code, message });
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Gradient Background */}
@@ -37,15 +46,21 @@ export function HeroSection() {
             Planifica tu futuro con la ayuda de IA avanzada. Convierte tus metas en planes accionables y alcanza tu máximo potencial.
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons or Auth Fallback */}
           <motion.div 
             className="flex flex-col sm:flex-row gap-4 w-full justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <SimpleGoogleButton />
-            <EmailSignInButton />
+            {authError ? (
+              <AuthFallback errorCode={authError.code} errorMessage={authError.message} />
+            ) : (
+              <>
+                <SimpleGoogleButton onError={handleAuthError} />
+                <EmailSignInButton />
+              </>
+            )}
           </motion.div>
 
           {/* Demo Button */}
