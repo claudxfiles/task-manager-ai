@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bell, BellOff, CheckCircle, XCircle } from "lucide-react";
+import { Bell, BellOff, CheckCircle, XCircle, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { requestNotificationPermission } from "@/lib/firebase";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface Notification {
   id: string;
@@ -100,27 +102,35 @@ export function NotificationsList() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Notificaciones</h2>
-        {notificationStatus === "default" && (
-          <button
-            onClick={handleRequestPermission}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            <Bell className="h-5 w-5" />
-            <span>Activar Notificaciones</span>
-          </button>
-        )}
-        {notificationStatus === "granted" && (
-          <Badge variant="secondary" className="flex items-center gap-2 bg-green-500/10 text-green-500">
-            <CheckCircle className="h-4 w-4" />
-            <span>Notificaciones Activadas</span>
-          </Badge>
-        )}
-        {notificationStatus === "denied" && (
-          <Badge variant="destructive" className="flex items-center gap-2">
-            <BellOff className="h-4 w-4" />
-            <span>Notificaciones Bloqueadas</span>
-          </Badge>
-        )}
+        <div className="flex items-center gap-2">
+          {notificationStatus === "default" && (
+            <button
+              onClick={handleRequestPermission}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              <Bell className="h-5 w-5" />
+              <span>Activar Notificaciones</span>
+            </button>
+          )}
+          {notificationStatus === "granted" && (
+            <Badge variant="secondary" className="flex items-center gap-2 bg-green-500/10 text-green-500">
+              <CheckCircle className="h-4 w-4" />
+              <span>Notificaciones Activadas</span>
+            </Badge>
+          )}
+          {notificationStatus === "denied" && (
+            <Badge variant="destructive" className="flex items-center gap-2">
+              <BellOff className="h-4 w-4" />
+              <span>Notificaciones Bloqueadas</span>
+            </Badge>
+          )}
+          <Button variant="outline" size="icon" asChild>
+            <Link href="/dashboard/notifications/settings">
+              <Settings className="h-4 w-4" />
+              <span className="sr-only">Configuración de notificaciones</span>
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {notifications.length === 0 ? (

@@ -36,3 +36,17 @@ model Notification {
   @@index([userEmail])
   @@index([createdAt])
 }
+
+model NotificationPreferences {
+  id        String   @id @default(cuid())
+  userEmail String   @unique
+  tasks     Boolean  @default(true)
+  goals     Boolean  @default(true)
+  reminders Boolean  @default(true)
+  system    Boolean  @default(true)
+  marketing Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userEmail])
+}

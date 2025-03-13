@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { createTwilioBinding } from '@/lib/twilio';
 
 // Esta es una implementación básica. En un entorno de producción,
 // deberías almacenar estos tokens en una base de datos.
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Buscar o crear el registro de notificación
+    // Buscar o crear el registro de notificación en la base de datos
     const notification = await prisma.notificationToken.upsert({
       where: {
         token: token,
@@ -41,6 +42,18 @@ export async function POST(req: Request) {
         lastUpdated: new Date(),
       },
     });
+
+    // Registrar el token en Twilio Notify
+    try {
+      // Usamos el email como identity, pero podría ser cualquier identificador único
+      const identity = session.user.email;
+      const twilioBinding = await createTwilioBinding(identity, token);
+      
+      console.log('Token registrado en Twilio Notify:', twilioBinding?.sid || 'No se pudo registrar');
+    } catch (twilioError) {
+      // No fallamos la petición si Twilio falla, solo registramos el error
+      console.error('Error al registrar token en Twilio Notify:', twilioError);
+    }
 
     return NextResponse.json({
       success: true,
