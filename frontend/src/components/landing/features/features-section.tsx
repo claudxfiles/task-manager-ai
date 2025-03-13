@@ -12,6 +12,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const features = [
   {
@@ -119,10 +120,12 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.8 }}
         >
-          <Button size="lg" className="group">
-            Explora Todas las Características
-            <Sparkles className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
-          </Button>
+          <Link href="/features">
+            <Button size="lg" className="group">
+              Explora Todas las Características
+              <Sparkles className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
+            </Button>
+          </Link>
         </motion.div>
 
         {/* Background Elements */}
