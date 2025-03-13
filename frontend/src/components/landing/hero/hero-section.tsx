@@ -2,9 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Mail } from "lucide-react";
 import Link from "next/link";
 import { SimpleGoogleButton } from "@/components/auth/simple-google-button";
+import { EmailSignInButton } from "@/components/auth/email-sign-in-button";
 
 export function HeroSection() {
   return (
@@ -44,6 +45,15 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <SimpleGoogleButton />
+            <EmailSignInButton />
+          </motion.div>
+
+          {/* Demo Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
+          >
             <Button 
               size="lg" 
               variant="secondary" 
