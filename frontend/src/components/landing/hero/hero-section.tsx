@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Mail } from "lucide-react";
 import Link from "next/link";
 import { SimpleGoogleButton } from "@/components/auth/simple-google-button";
+import { DirectGoogleButton } from "@/components/auth/direct-google-button";
 import { EmailSignInButton } from "@/components/auth/email-sign-in-button";
 import { useState } from "react";
 import { AuthFallback } from "@/components/auth/auth-fallback";
@@ -57,7 +58,7 @@ export function HeroSection() {
               <AuthFallback errorCode={authError.code} errorMessage={authError.message} />
             ) : (
               <>
-                <SimpleGoogleButton onError={handleAuthError} />
+                <DirectGoogleButton onError={handleAuthError} />
                 <EmailSignInButton />
               </>
             )}
