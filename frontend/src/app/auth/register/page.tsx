@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { Brain, ArrowLeft } from "lucide-react";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -62,12 +63,26 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/50 p-4">
+      <Link 
+        href="/" 
+        className="absolute top-8 left-8 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Volver al inicio
+      </Link>
+      
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
+        <div className="flex justify-center mb-6">
+          <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-soul-purple to-soul-blue flex items-center justify-center">
+            <Brain className="w-6 h-6 text-white" />
+          </div>
+        </div>
+        
         <Card className="border-soul-purple/20 shadow-lg">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-2xl font-bold">Crear Cuenta</CardTitle>
@@ -76,7 +91,11 @@ export default function RegisterPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <GoogleSignInButton />
+            <GoogleSignInButton 
+              variant="default" 
+              className="bg-soul-purple hover:bg-soul-purple/90"
+              text="Registrarse con Google" 
+            />
             
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">

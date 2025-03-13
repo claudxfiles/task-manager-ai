@@ -5,11 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, ArrowLeft, Loader2 } from "lucide-react";
+import { Brain, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { signIn } from "next-auth/react";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 
 export default function LoginPage() {
@@ -76,7 +75,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-background/80 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/50 p-4">
       <Link 
         href="/" 
         className="absolute top-8 left-8 flex items-center text-muted-foreground hover:text-foreground transition-colors"
@@ -97,24 +96,26 @@ export default function LoginPage() {
           </div>
         </div>
         
-        <Card>
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Iniciar sesión</CardTitle>
-            <CardDescription className="text-center">
+        <Card className="border-soul-purple/20 shadow-lg">
+          <CardHeader className="space-y-1 text-center">
+            <CardTitle className="text-2xl font-bold">Iniciar Sesión</CardTitle>
+            <CardDescription>
               Ingresa tus credenciales para acceder a tu cuenta
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="mb-4">
-              <GoogleSignInButton />
-            </div>
+          <CardContent className="space-y-4">
+            <GoogleSignInButton 
+              variant="default" 
+              className="bg-soul-purple hover:bg-soul-purple/90"
+              text="Iniciar Sesión con Google" 
+            />
             
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
+                <span className="w-full border-t border-muted-foreground/30" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-card px-2 text-muted-foreground">
                   O continúa con
                 </span>
               </div>
@@ -122,12 +123,12 @@ export default function LoginPage() {
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Correo electrónico</Label>
                 <Input 
                   id="email" 
                   name="email" 
                   type="email" 
-                  placeholder="tu@email.com" 
+                  placeholder="tu@ejemplo.com" 
                   value={formData.email}
                   onChange={handleChange}
                   disabled={isLoading}
@@ -137,7 +138,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Contraseña</Label>
-                  <Link href="/auth/forgot-password" className="text-xs text-primary hover:underline">
+                  <Link href="/auth/forgot-password" className="text-xs text-soul-purple hover:underline">
                     ¿Olvidaste tu contraseña?
                   </Link>
                 </div>
@@ -145,33 +146,50 @@ export default function LoginPage() {
                   id="password" 
                   name="password" 
                   type="password" 
-                  placeholder="********" 
+                  placeholder="••••••••" 
                   value={formData.password}
                   onChange={handleChange}
                   disabled={isLoading}
                 />
               </div>
               
-              {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+              {error && (
+                <motion.p
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-destructive text-sm"
+                >
+                  {error}
+                </motion.p>
+              )}
               
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                className="w-full bg-soul-purple hover:bg-soul-purple/90" 
+                disabled={isLoading}
+              >
                 {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                     Iniciando sesión...
-                  </>
+                  </span>
                 ) : (
-                  "Iniciar sesión"
+                  "Iniciar Sesión"
                 )}
               </Button>
             </form>
             
-            <div className="relative my-6">
+            <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-muted"></div>
+                <span className="w-full border-t border-muted-foreground/30" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">O prueba con</span>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-card px-2 text-muted-foreground">
+                  O prueba con
+                </span>
               </div>
             </div>
             
@@ -185,9 +203,9 @@ export default function LoginPage() {
             </Button>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <div className="text-sm text-center text-muted-foreground">
+            <div className="text-center text-sm">
               ¿No tienes una cuenta?{" "}
-              <Link href="/auth/register" className="text-primary hover:underline">
+              <Link href="/auth/register" className="text-soul-purple hover:underline font-medium">
                 Regístrate
               </Link>
             </div>

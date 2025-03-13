@@ -9,12 +9,14 @@ interface GoogleSignInButtonProps {
   callbackUrl?: string;
   className?: string;
   variant?: "default" | "outline" | "secondary" | "ghost" | "link" | "destructive";
+  text?: string;
 }
 
 export function GoogleSignInButton({
   callbackUrl = "/dashboard",
   className = "",
-  variant = "outline"
+  variant = "outline",
+  text = "Continuar con Google"
 }: GoogleSignInButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,7 +55,7 @@ export function GoogleSignInButton({
             height={18}
             className="h-4 w-4"
           />
-          Continuar con Google
+          {text}
         </>
       )}
     </Button>
