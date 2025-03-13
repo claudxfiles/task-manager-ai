@@ -6,8 +6,8 @@ import { Providers } from "@/components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Task Manager AI",
-  description: "Gestiona tus tareas y calendario de forma inteligente",
+  title: "SoulDream",
+  description: "Tu asistente personal para el desarrollo y crecimiento.",
 };
 
 export default function RootLayout({
