@@ -60,7 +60,7 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-24 relative overflow-hidden">
+    <section id="features" className="py-24 bg-muted/50 relative overflow-hidden">
       <div className="container relative z-10">
         {/* Section Header */}
         <div className="text-center space-y-4 mb-16">

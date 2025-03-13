@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Brain, Menu, X } from "lucide-react";
-import { signIn } from "next-auth/react";
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -71,9 +70,11 @@ export function Navbar() {
         {/* Actions */}
         <div className="hidden md:flex md:items-center md:space-x-4">
           <ModeToggle />
-          <Button variant="outline" onClick={() => signIn()}>
-            Iniciar Sesión
-          </Button>
+          <Link href="/auth/login">
+            <Button variant="outline">
+              Iniciar Sesión
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -89,9 +90,11 @@ export function Navbar() {
                 <Link href="/dashboard">Dashboard</Link>
                 <Link href="/pricing">Precios</Link>
                 <Link href="/about">Acerca de</Link>
-                <Button variant="outline" onClick={() => signIn()}>
-                  Iniciar Sesión
-                </Button>
+                <Link href="/auth/login">
+                  <Button variant="outline" className="w-full">
+                    Iniciar Sesión
+                  </Button>
+                </Link>
               </div>
             </SheetContent>
           </Sheet>

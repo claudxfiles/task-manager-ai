@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -41,11 +42,21 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Button size="lg" className="group">
-              Comienza Gratis
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-            <Button size="lg" variant="secondary" className="group">
+            <Link href="/auth/register">
+              <Button size="lg" className="group">
+                Comienza Gratis
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+            <Button 
+              size="lg" 
+              variant="secondary" 
+              className="group"
+              onClick={() => {
+                // Scroll to the features section
+                document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
               Ver Demo
               <Sparkles className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
             </Button>
