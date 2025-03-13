@@ -1,161 +1,76 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Dumbbell, Wallet, Target, Activity, Calendar, BarChart2, Settings, MessageSquare } from "lucide-react";
-import Link from "next/link";
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Wallet, Dumbbell, Target, Activity, Calendar, MessageSquare } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function DashboardPage() {
+  const modules = [
+    {
+      icon: <Wallet className="w-5 h-5" />,
+      title: 'Finanzas',
+      href: '/dashboard/finances'
+    },
+    {
+      icon: <Dumbbell className="w-5 h-5" />,
+      title: 'Workout',
+      href: '/dashboard/workout'
+    },
+    {
+      icon: <Target className="w-5 h-5" />,
+      title: 'Metas',
+      href: '/dashboard/goals'
+    },
+    {
+      icon: <Activity className="w-5 h-5" />,
+      title: 'Hábitos',
+      href: '/dashboard/habits'
+    },
+    {
+      icon: <Calendar className="w-5 h-5" />,
+      title: 'Calendario',
+      href: '/dashboard/calendar'
+    },
+    {
+      icon: <MessageSquare className="w-5 h-5" />,
+      title: 'Chat con IA',
+      href: '/dashboard/ai-chat'
+    }
+  ];
+
   return (
-    <div className="space-y-6">
-      <motion.h1 
-        className="text-2xl font-bold"
-        initial={{ opacity: 0, y: -20 }}
+    <div className="container mx-auto p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
-        Dashboard
-      </motion.h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card className="p-6">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Wallet className="h-5 w-5" /> Finanzas
-            </CardTitle>
-            <CardDescription>
-              Gestiona tus finanzas personales
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pb-2">
-            <p className="text-muted-foreground">
-              Controla tus ingresos, gastos y ahorra para tus metas financieras.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Button asChild className="w-full">
-              <Link href="/dashboard/finances">
-                Ir a Finanzas
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card className="p-6">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Dumbbell className="h-5 w-5" /> Workout
-            </CardTitle>
-            <CardDescription>
-              Gestiona tus entrenamientos
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pb-2">
-            <p className="text-muted-foreground">
-              Planifica tus rutinas de ejercicio y haz seguimiento de tu progreso.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Button asChild className="w-full">
-              <Link href="/dashboard/workout">
-                Ir a Workout
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card className="p-6">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5" /> Metas
-            </CardTitle>
-            <CardDescription>
-              Define y alcanza tus objetivos
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pb-2">
-            <p className="text-muted-foreground">
-              Establece metas claras y haz seguimiento de tu progreso.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Button asChild className="w-full">
-              <Link href="/dashboard/goals">
-                Ir a Metas
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card className="p-6">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="h-5 w-5" /> Hábitos
-            </CardTitle>
-            <CardDescription>
-              Desarrolla hábitos positivos
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pb-2">
-            <p className="text-muted-foreground">
-              Crea y mantén hábitos saludables para mejorar tu vida.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Button asChild className="w-full">
-              <Link href="/dashboard/habits">
-                Ir a Hábitos
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card className="p-6">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" /> Calendario
-            </CardTitle>
-            <CardDescription>
-              Organiza tu tiempo
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pb-2">
-            <p className="text-muted-foreground">
-              Planifica tus actividades y gestiona tu tiempo de manera eficiente.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Button asChild className="w-full">
-              <Link href="/dashboard/calendar">
-                Ir a Calendario
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card className="p-6">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" /> Chat con IA
-            </CardTitle>
-            <CardDescription>
-              Tu asistente personal
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pb-2">
-            <p className="text-muted-foreground">
-              Consulta con tu asistente de IA para obtener ayuda y consejos.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Button asChild className="w-full">
-              <Link href="/dashboard/ai-chat">
-                Ir a Chat con IA
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+        {modules.map((module, index) => (
+          <motion.div
+            key={module.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+          >
+            <Card className="group relative overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <Button
+                variant="ghost"
+                className="w-full h-full p-6 flex flex-col items-center justify-center gap-3 hover:bg-accent/50"
+                asChild
+              >
+                <a href={module.href}>
+                  <div className="text-muted-foreground group-hover:text-primary transition-colors duration-200">
+                    {module.icon}
+                  </div>
+                  <span className="font-medium">{module.title}</span>
+                </a>
+              </Button>
+            </Card>
+          </motion.div>
+        ))}
+      </motion.div>
     </div>
   );
 }
