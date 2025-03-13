@@ -1,19 +1,27 @@
-import { Metadata } from "next"
-import { TaskBoard } from "@/components/task-board"
-import { TaskSidebar } from "@/components/task-sidebar"
-
-export const metadata: Metadata = {
-  title: "Dashboard - Task Manager",
-  description: "Gestiona tus tareas de manera eficiente",
-}
+import { HeroSection } from "@/components/landing/hero/hero-section";
+import { HowItWorks } from "@/components/landing/features/how-it-works";
+import { FeaturesSection } from "@/components/landing/features/features-section";
+import { TestimonialsSection } from "@/components/landing/testimonials/testimonials-section";
+import { PricingSection } from "@/components/landing/pricing/pricing-section";
+import { FaqSection } from "@/components/landing/faq/faq-section";
+import { CTASection } from "@/components/landing/cta/cta-section";
+import { Footer } from "@/components/landing/footer/footer";
+import { Navbar } from "@/components/landing/navbar/navbar";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen">
-      <TaskSidebar />
-      <div className="flex-1">
-        <TaskBoard />
-      </div>
-    </main>
-  )
-} 
+    <>
+      <Navbar />
+      <main className="min-h-screen">
+        <HeroSection />
+        <HowItWorks />
+        <FeaturesSection />
+        <TestimonialsSection />
+        <PricingSection />
+        <FaqSection />
+        <CTASection />
+      </main>
+      <Footer />
+    </>
+  );
+}

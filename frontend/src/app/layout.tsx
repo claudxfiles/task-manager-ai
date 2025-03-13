@@ -1,15 +1,14 @@
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { Providers } from "../components/providers"
-import { Toaster } from "../components/ui/toaster"
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Providers } from "@/components/providers";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Task Manager",
-  description: "A simple task manager application",
-}
+  title: "Task Manager AI",
+  description: "Gestiona tus tareas y calendario de forma inteligente",
+};
 
 export default function RootLayout({
   children,
@@ -17,13 +16,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="es" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
           {children}
-          <Toaster />
         </Providers>
       </body>
     </html>
-  )
-} 
+  );
+}
