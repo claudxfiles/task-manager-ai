@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { SimpleGoogleButton } from "@/components/auth/simple-google-button";
 
 export function HeroSection() {
   return (
@@ -43,12 +43,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <GoogleSignInButton 
-              variant="default"
-              text="Comienza Gratis"
-              size="lg"
-              className="sm:w-auto px-8"
-            />
+            <SimpleGoogleButton />
             <Button 
               size="lg" 
               variant="secondary" 
