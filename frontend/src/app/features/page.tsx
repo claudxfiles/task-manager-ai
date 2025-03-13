@@ -19,7 +19,8 @@ import {
   Users,
   Shield,
   Lock,
-  X
+  X,
+  Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +45,8 @@ const allFeatures = [
     description: "Convierte tus metas en objetivos específicos, medibles, alcanzables, relevantes y temporales.",
     color: "from-soul-blue to-soul-green",
     delay: 0.15,
-    restricted: false
+    restricted: false,
+    included: true
   },
   {
     icon: LineChart,
@@ -52,7 +54,8 @@ const allFeatures = [
     description: "Visualiza tu avance con métricas claras y ajusta tu estrategia según sea necesario.",
     color: "from-soul-green to-soul-purple",
     delay: 0.2,
-    restricted: false
+    restricted: false,
+    included: true
   },
   {
     icon: Calendar,
@@ -229,6 +232,10 @@ export default function FeaturesPage() {
                   <div className="w-3 h-3 rounded-full bg-red-500"></div>
                   <span>No disponible</span>
                 </div>
+                <div className="inline-flex items-center gap-1.5 text-sm">
+                  <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
+                  <span>Incluido en todos los planes</span>
+                </div>
               </motion.div>
             </div>
 
@@ -242,7 +249,7 @@ export default function FeaturesPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: feature.delay }}
                 >
-                  <div className={`glass-effect p-6 space-y-4 h-full transition-all duration-300 hover:translate-y-[-4px] ${feature.restricted ? 'border border-muted' : ''}`}>
+                  <div className={`glass-effect p-6 space-y-4 h-full transition-all duration-300 hover:translate-y-[-4px] ${feature.restricted ? 'border border-muted' : feature.included ? 'border border-yellow-500/30' : ''}`}>
                     {/* Restriction Badge */}
                     {feature.restricted && (
                       <Badge 
@@ -262,6 +269,17 @@ export default function FeaturesPage() {
                       </Badge>
                     )}
                     
+                    {/* Included Badge */}
+                    {feature.included && (
+                      <Badge 
+                        variant="outline" 
+                        className="absolute top-3 right-3 bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                      >
+                        <Star className="w-3 h-3 mr-1 fill-yellow-500" />
+                        Incluido en todos los planes
+                      </Badge>
+                    )}
+                    
                     {/* Icon */}
                     <div className="relative">
                       <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} flex items-center justify-center ${feature.restricted ? 'opacity-70' : ''}`}>
@@ -278,6 +296,11 @@ export default function FeaturesPage() {
                           )}
                         </div>
                       )}
+                      {feature.included && (
+                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
+                          <Star className="w-3 h-3 text-white fill-white" />
+                        </div>
+                      )}
                     </div>
 
                     {/* Content */}
@@ -287,6 +310,9 @@ export default function FeaturesPage() {
                         <div className={`w-2 h-2 rounded-full ${
                           feature.restrictionType === 'unavailable' ? 'bg-red-500' : 'bg-amber-500'
                         }`}></div>
+                      )}
+                      {feature.included && (
+                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                       )}
                     </h3>
                     <p className="text-muted-foreground">{feature.description}</p>
@@ -299,6 +325,13 @@ export default function FeaturesPage() {
                         {feature.restrictionType === 'unavailable' 
                           ? 'No disponible en cuenta gratuita' 
                           : 'Uso limitado en cuenta gratuita'}
+                      </p>
+                    )}
+                    
+                    {/* Included Info */}
+                    {feature.included && (
+                      <p className="text-sm text-yellow-500">
+                        Disponible en todos los planes sin restricciones
                       </p>
                     )}
                   </div>
