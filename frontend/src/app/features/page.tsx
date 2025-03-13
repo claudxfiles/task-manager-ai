@@ -17,9 +17,12 @@ import {
   BarChart2,
   Settings,
   Users,
-  Shield
+  Shield,
+  Lock,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Navbar } from "@/components/landing/navbar/navbar";
 import { Footer } from "@/components/landing/footer/footer";
@@ -31,6 +34,9 @@ const allFeatures = [
     description: "Dialoga de forma natural sobre tus metas y recibe orientación personalizada basada en tus respuestas.",
     color: "from-soul-purple to-soul-blue",
     delay: 0.1,
+    restricted: true,
+    restrictionType: "limited",
+    restrictionText: "1 uso disponible"
   },
   {
     icon: Target,
@@ -38,6 +44,7 @@ const allFeatures = [
     description: "Convierte tus metas en objetivos específicos, medibles, alcanzables, relevantes y temporales.",
     color: "from-soul-blue to-soul-green",
     delay: 0.15,
+    restricted: false
   },
   {
     icon: LineChart,
@@ -45,6 +52,7 @@ const allFeatures = [
     description: "Visualiza tu avance con métricas claras y ajusta tu estrategia según sea necesario.",
     color: "from-soul-green to-soul-purple",
     delay: 0.2,
+    restricted: false
   },
   {
     icon: Calendar,
@@ -52,6 +60,9 @@ const allFeatures = [
     description: "Organiza tus metas en un calendario realista con recordatorios y fechas clave.",
     color: "from-soul-purple to-soul-blue",
     delay: 0.25,
+    restricted: true,
+    restrictionType: "unavailable",
+    restrictionText: "No disponible"
   },
   {
     icon: MessageSquare,
@@ -59,6 +70,7 @@ const allFeatures = [
     description: "Recibe retroalimentación constructiva y sugerencias de mejora en tiempo real.",
     color: "from-soul-blue to-soul-green",
     delay: 0.3,
+    restricted: false
   },
   {
     icon: RefreshCw,
@@ -66,6 +78,7 @@ const allFeatures = [
     description: "El plan se ajusta automáticamente según tu progreso y circunstancias cambiantes.",
     color: "from-soul-green to-soul-purple",
     delay: 0.35,
+    restricted: false
   },
   {
     icon: CheckCircle,
@@ -73,6 +86,7 @@ const allFeatures = [
     description: "Crea y mantén hábitos positivos con recordatorios y estadísticas de consistencia.",
     color: "from-soul-purple to-soul-blue",
     delay: 0.4,
+    restricted: false
   },
   {
     icon: Wallet,
@@ -80,6 +94,9 @@ const allFeatures = [
     description: "Controla tus finanzas personales y establece metas de ahorro e inversión.",
     color: "from-soul-blue to-soul-green",
     delay: 0.45,
+    restricted: true,
+    restrictionType: "unavailable",
+    restrictionText: "No disponible"
   },
   {
     icon: Activity,
@@ -87,6 +104,7 @@ const allFeatures = [
     description: "Realiza un seguimiento de tu salud física y mental con métricas personalizadas.",
     color: "from-soul-green to-soul-purple",
     delay: 0.5,
+    restricted: false
   },
   {
     icon: BarChart2,
@@ -94,6 +112,7 @@ const allFeatures = [
     description: "Visualiza tu progreso con gráficos detallados y análisis de tendencias.",
     color: "from-soul-purple to-soul-blue",
     delay: 0.55,
+    restricted: false
   },
   {
     icon: Settings,
@@ -101,6 +120,7 @@ const allFeatures = [
     description: "Adapta la aplicación a tus necesidades con opciones de personalización extensas.",
     color: "from-soul-blue to-soul-green",
     delay: 0.6,
+    restricted: false
   },
   {
     icon: Users,
@@ -108,6 +128,7 @@ const allFeatures = [
     description: "Conecta con otros usuarios para compartir experiencias y motivación.",
     color: "from-soul-green to-soul-purple",
     delay: 0.65,
+    restricted: false
   },
   {
     icon: Shield,
@@ -115,6 +136,7 @@ const allFeatures = [
     description: "Tus datos están seguros con encriptación de extremo a extremo y controles de privacidad.",
     color: "from-soul-purple to-soul-blue",
     delay: 0.7,
+    restricted: false
   },
   {
     icon: Clock,
@@ -122,6 +144,7 @@ const allFeatures = [
     description: "Recibe notificaciones contextuales basadas en tus hábitos y preferencias.",
     color: "from-soul-blue to-soul-green",
     delay: 0.75,
+    restricted: false
   },
   {
     icon: Sparkles,
@@ -129,6 +152,7 @@ const allFeatures = [
     description: "Mantén la motivación con un sistema de recompensas, logros y desafíos.",
     color: "from-soul-green to-soul-purple",
     delay: 0.8,
+    restricted: false
   },
 ];
 
@@ -166,6 +190,26 @@ export default function FeaturesPage() {
               >
                 Descubre todas las herramientas y funcionalidades que SoulDream ofrece para ayudarte a alcanzar tus metas y transformar tu vida
               </motion.p>
+              
+              <motion.div
+                className="flex flex-wrap justify-center gap-2 mt-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <div className="inline-flex items-center gap-1.5 text-sm">
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                  <span>Acceso completo</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 text-sm">
+                  <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                  <span>Uso limitado</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 text-sm">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <span>No disponible</span>
+                </div>
+              </motion.div>
             </div>
 
             {/* Features Grid */}
@@ -178,17 +222,65 @@ export default function FeaturesPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: feature.delay }}
                 >
-                  <div className="glass-effect p-6 space-y-4 h-full transition-all duration-300 hover:translate-y-[-4px]">
+                  <div className={`glass-effect p-6 space-y-4 h-full transition-all duration-300 hover:translate-y-[-4px] ${feature.restricted ? 'border border-muted' : ''}`}>
+                    {/* Restriction Badge */}
+                    {feature.restricted && (
+                      <Badge 
+                        variant="outline" 
+                        className={`absolute top-3 right-3 ${
+                          feature.restrictionType === 'unavailable' 
+                            ? 'bg-red-500/10 text-red-500 border-red-500/20' 
+                            : 'bg-amber-500/10 text-amber-500 border-amber-500/20'
+                        }`}
+                      >
+                        {feature.restrictionType === 'unavailable' ? (
+                          <X className="w-3 h-3 mr-1" />
+                        ) : (
+                          <Lock className="w-3 h-3 mr-1" />
+                        )}
+                        {feature.restrictionText}
+                      </Badge>
+                    )}
+                    
                     {/* Icon */}
                     <div className="relative">
-                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} flex items-center justify-center`}>
+                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} flex items-center justify-center ${feature.restricted ? 'opacity-70' : ''}`}>
                         <feature.icon className="w-6 h-6 text-white" />
                       </div>
+                      {feature.restricted && (
+                        <div className={`absolute -top-1 -right-1 w-5 h-5 ${
+                          feature.restrictionType === 'unavailable' ? 'bg-red-500' : 'bg-amber-500'
+                        } rounded-full flex items-center justify-center`}>
+                          {feature.restrictionType === 'unavailable' ? (
+                            <X className="w-3 h-3 text-white" />
+                          ) : (
+                            <Lock className="w-3 h-3 text-white" />
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {/* Content */}
-                    <h3 className="text-xl font-semibold">{feature.title}</h3>
+                    <h3 className="text-xl font-semibold flex items-center gap-2">
+                      {feature.title}
+                      {feature.restricted && (
+                        <div className={`w-2 h-2 rounded-full ${
+                          feature.restrictionType === 'unavailable' ? 'bg-red-500' : 'bg-amber-500'
+                        }`}></div>
+                      )}
+                    </h3>
                     <p className="text-muted-foreground">{feature.description}</p>
+                    
+                    {/* Restriction Info */}
+                    {feature.restricted && (
+                      <p className={`text-sm ${
+                        feature.restrictionType === 'unavailable' ? 'text-red-500' : 'text-amber-500'
+                      }`}>
+                        {feature.restrictionType === 'unavailable' 
+                          ? 'No disponible en cuenta gratuita' 
+                          : 'Uso limitado en cuenta gratuita'}
+                      </p>
+                    )}
                   </div>
                 </motion.div>
               ))}
@@ -196,17 +288,28 @@ export default function FeaturesPage() {
 
             {/* CTA Section */}
             <motion.div 
-              className="mt-16 text-center"
+              className="mt-16 text-center space-y-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.9 }}
             >
-              <Link href="/auth/register">
-                <Button size="lg" className="group">
-                  Comienza a Usar Todas las Características
-                  <Sparkles className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                </Button>
-              </Link>
+              <p className="text-muted-foreground max-w-[700px] mx-auto">
+                Regístrate gratis para acceder a la mayoría de las características. Actualiza a Premium para desbloquear todas las funcionalidades sin restricciones.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/auth/register">
+                  <Button size="lg" className="group">
+                    Comenzar Gratis
+                    <Sparkles className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                  </Button>
+                </Link>
+                <Link href="/pricing">
+                  <Button size="lg" variant="outline" className="group">
+                    Ver Planes Premium
+                    <Lock className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                  </Button>
+                </Link>
+              </div>
             </motion.div>
 
             {/* Background Elements */}
